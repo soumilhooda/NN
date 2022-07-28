@@ -1,7 +1,7 @@
-# Machine Learning / Deep Learning / Neural Networks to Computer Vision
-My learning space for various ML/NN/RNN/CNN/DL/CV concepts.
+# NN
+My early learning space for various ML/NN/RNN/CNN/DL/CV concepts.
 
-Shall write descriptions after fininshing my semester backlog. Mathematical Methods of Physics is getting the better of me.
+Shall write descriptions after fininshing my semester backlog. Mathematical Methods of Physics is getting the better of me. Update - It did end up getting the better of me :')
 
 # Overview
 Have implemented the following tasks from-scratch (i.e. without the use of libraries here);
