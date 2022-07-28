@@ -1,0 +1,1315 @@
+1
+CubeSat NEMOlite Report
+CubeSat team, SEDS BPHC
+March 2022
+Contents
+1 Introduction 4
+1.1 Orbit Determination . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+1.2 Attitude Determination and Control System . . . . . . . . . . . . . . . 5
+1.3 Communications . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+1.4 Command and Data Handling . . . . . . . . . . . . . . . . . . . . . . . 5
+1.5 Electrical Power System . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+1.6 Mechanical System . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+1.7 Remote Sensing and Image Processing . . . . . . . . . . . . . . . . . . 6
+1.8 Operations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+2 Orbit Determination 8
+2.1 Aim of the Team . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+2.2 Progress . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+2.3 Areas of Difficulty and Uncertainty . . . . . . . . . . . . . . . . . . . . 8
+2.4 Literature Review . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+3 Attitude Determination and Control System 10
+3.1 Overview . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+3.2 Attitude Parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+3.3 1 DoF Simulation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+3.4 Magnetic B-dot controller . . . . . . . . . . . . . . . . . . . . . . . . . 15
+3.5 3 DoF Reaction Wheel Simulation . . . . . . . . . . . . . . . . . . . . . 17
+3.6 ADCS Test Rig . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+1
+
+2
+3.7 Attitude Determination System . . . . . . . . . . . . . . . . . . . . . . 20
+3.8 Potential problem areas . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+3.9 Further Work . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+3.10 References . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+4 Communications 23
+4.1 Overview . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+4.2 Communication requirements of NEMOlite . . . . . . . . . . . . . . . . 23
+4.3 Current understanding of the communication stack . . . . . . . . . . . 23
+4.4 Current Progress . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+4.5 Problems . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+4.6 Ground Segment of the Communication Subsystem . . . . . . . . . . . 25
+4.6.1 Proposal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+4.6.2 Methodology . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+4.6.3 OGS Usage . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+4.6.4 Current issues with Ground segment . . . . . . . . . . . . . . . 27
+4.6.5 OGS Budget . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+4.6.6 Addressing possible concerns . . . . . . . . . . . . . . . . . . . . 28
+4.7 References . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+5 Command and Data Handling 30
+5.1 Overview . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+5.2 Design Considerations: . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+5.3 Development: . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+5.3.1 Baremetal + RTOS . . . . . . . . . . . . . . . . . . . . . . . . . 31
+5.3.2 core Flight Software (cFS) - NASA . . . . . . . . . . . . . . . . 32
+5.3.3 F’ (F prime) - NASA . . . . . . . . . . . . . . . . . . . . . . . . 32
+5.4 Further work: . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+5.5 Challenges: . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+6 Electrical Power System 36
+6.1 Overview . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+6.2 Satellite circuitry block diagram . . . . . . . . . . . . . . . . . . . . . . 36
+6.3 Design of Custom ICs . . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+6.4 Methodology Adopted in Circuit Design . . . . . . . . . . . . . . . . . 38
+2
+
+3
+6.5 Issues faced . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+7 Mechanical System 41
+7.1 The Subsytstem and the Work Undertaken . . . . . . . . . . . . . . . . 41
+7.1.1 Structural Subsystem . . . . . . . . . . . . . . . . . . . . . . . . 41
+7.1.2 Thermal Subsytem . . . . . . . . . . . . . . . . . . . . . . . . . 41
+7.2 References . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 42
+8 Remote Sensing and Image Processing 43
+8.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+8.2 Our Literature Review : Remote Sensing . . . . . . . . . . . . . . . . . 43
+8.2.1 The basics of the problem . . . . . . . . . . . . . . . . . . . . . 43
+8.2.2 The functioning of the imager for the problem . . . . . . . . . . 44
+8.2.3 What everything revolves around: the DATA Collection . . . . . 45
+8.2.4 Our scanning system . . . . . . . . . . . . . . . . . . . . . . . . 47
+8.3 Imager . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 48
+8.3.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 48
+8.3.2 Building the Imager . . . . . . . . . . . . . . . . . . . . . . . . 48
+8.3.3 Testing Methodology . . . . . . . . . . . . . . . . . . . . . . . . 49
+8.3.4 Communication and Data Handling . . . . . . . . . . . . . . . . 49
+8.3.5 Algorithm . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 50
+8.3.6 References . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 50
+9 Conclusion 51
+3
+
+4
+1 Introduction
+CubeSats are miniature satellites usually in cubic shapes. They are highly sophisti-
+cated, and intricate satellites that have amultitude of applications like communication,
+earth observation, carrying testing equipment, and defense. They can be put into orbit
+as payloads in launch vehicles. CubeSats have purposes like Earth observation, biolog-
+ical payload, etc. In the past few years with many universities have sent student-built
+satellites
+We are a group of passionate and motivated students looking to launch a LEO (low-
+earth orbit) remote-sensing satellite to monitor the level of microplastics in the Marine
+National Park in Gulf of Mannar. The proposed satellite is called NEMO, short for
+”Near-Earth Microplastics Observation”. It will be fitted with a hyperspectral imager
+to capture images of the water body. We hope that the data from our observation
+satellite would help independent researchers, institutions, and the state government to
+better maintain and protect the ecosystem. We aim to collaborate with ISRO and use
+their launch vehicle to put our CubeSat into orbit.
+Launching a satellite in itself is a very complex endeavour, and a hyperspectral im-
+ager multiplies the complexity. Before launching the satellite with the actual payload,
+we intend to launch a test satellite called NEMOlite. This will carry the minimum
+subsystems required and run their algorithms. It will serve as a demo satellite, with
+housekeeping data that will help us figure out our mistakes, and correct them for
+NEMO. It will also help us prove our capabilities to design and launch a satellite, and
+have the flight hardware and software gain flight heritage.
+The following are the various subsystems and the members that have contributed
+in each of them.
+1.1 Orbit Determination
+This deals with determining the precise orbit of the CubeSat. It is the fundamental
+first step that fixes all the other constraints from which the power available, pass time
+and other such parameters can be calculated.
+1. Shreedhar Rajesh
+2. Anagha G
+4
+
+5
+1.2 Attitude Determination and Control System
+This system deals with stabilizing the satellite and controlling where it points in space.
+It could require to point the hyperspectral imager towards the water body, or antenna
+towards ground station while passing.
+1. Arya Pathak
+2. Komal Agrawal
+3. Abhijit Pamarty
+1.3 Communications
+This module deals with the communication between the satellite and the ground sta-
+tion. It includes both the onboard communications module, and the ground station.
+1. Arunabh Singh
+2. Prabhav Guddati
+3. Karthik Verma
+1.4 Command and Data Handling
+This is the main onboard computer of the satellite that coordinates between the func-
+tioning of various other systems and controls the various power modes of operation. It
+also deals with operations like logging critical telemetry data, error detection, correc-
+tion and listening for commands and instructions.
+1. Deep Chordia
+2. Parth Tulsyan
+3. Arya Pathak
+4. Prabhav Guddati
+5. Nishith Kumar
+5
+
+6
+1.5 Electrical Power System
+This system ensures proper power supply to all parts of the satellite at all times. It
+reports the amount of current and power being generated from the solar panel and
+distributes power as required among various systems of the satellite.
+1. Kushal Mishra
+2. Abhijit Pamarty
+1.6 Mechanical System
+This system deals with the structural and thermal aspect of the satellite. It is re-
+sponsible for designing the physical structure of the satellite and ensuring that it can
+withstand the extreme temperature fluctuations in space.
+1. Brahmini P
+2. Aswathram Karunanithi
+3. Siddharth Sekhar
+1.7 Remote Sensing and Image Processing
+This system is the main payload and mission of the satellite. It looks into the physical
+development of the hyperspectral imager that goes onboard the satellite, as well as the
+software algorithms that go into processing the hyperspectral data and determining
+the amount of microplastics in the water body.
+1. Soumil Hooda
+2. Raghuram C S
+3. Kartikeya Dubey
+1.8 Operations
+Operations is the glue that holds the entire team together. From finding information
+about launch opportunities to researching into work done by other student satellite
+teams, from finding out open source satellite organizations to approach for possible
+6
+
+7
+technical mentorship to handling all legalities and licensing-related matters, documen-
+tation, everything is handled by this group of people.
+1. Advith Desu
+2. Vibav S
+This report summarizes our ideas, current progress, future plans, and problems faced
+of in our project. It has been divided into various subsystems and carries detailed
+description of the progress made in each of them.
+7
+
+8
+2 Orbit Determination
+2.1 Aim of the Team
+To determine the orbit for a 1-3U CubeSat examining concentrations of microplastics
+over the Gulf of Mannar.
+2.2 Progress
+1. Both members have finished a course on Orbital Mechanics and gone through
+the notes for the same.
+2. Finished some literature review.
+3. Have basic understanding on perturbations and maneuvers.
+4. Have decided that a near-polar orbit is going to be used (Preferably a Sun-
+Synchronous Orbit).
+5. By exploiting this fact, a basic idea of the inclination angle (i) and Latus Rectum
+(p) of the orbit has been speculated. However, some more surety would be needed.
+6. An equation has been derived linking 4 classical orbit elements (a, e, i, Ω) in the
+orbital reference frame with the Y component of the Specific Azimuthal Angular
+Momentum in the Perifocal Reference Frame.
+2×h2 y
+a×(1+e)×(1−e) = (1)
+µ×sin(2i) ×(cos(Ω))2
+2.3 Areas of Difficulty and Uncertainty
+Determining a precise orbit for the CubeSat is of utmost immediate relevance and
+importance. Once the orbit is fixed, the pass times can be determined which from which
+the required downlink speed can be calculated, and the communications stack can be
+chosen accordingly. The total power available to the satellite can also be calculated
+once the orbit is fixed, and from this constraint the rest of the hardware can be selected.
+However, progress in this area has been held up considerably due to lack of guidance.
+The following are some of the issues faced while working in determining the orbit:
+1. Literature review is very rigorous and not a lot of progress is being made by
+reading alone. Help of a professor would be essential at this point
+8
+
+9
+2. Lack of a clear direction in the process of determining classical orbit elements (a,
+e, i, Ω, ω and θ)
+3. As mentioned in an earlier point, the fact that it is a sun synchronous orbit has
+helped us determine a, e and i to a certain extent. However, at this point, it is
+still a speculation.
+4. Have thought of an approach to determine The Ascending node and thus the
+Right ascension of ascending node (RAAN) of the orbit () with help of geometrical
+analysis. But lacking in surety as it is just a speculation.
+5. Lack in clear direction is determining the orbit elements (Components of position
+and velocity of the satellite). Thus, having trouble in locking on to the Specific
+Azimuthal Angular Momentum. Would like to get more insight on this problem
+especially.
+6. Would like to get more insight on previous attempts on CubeSat Orbits to get a
+better idea.
+2.4 Literature Review
+1. Autonomous Orbit Determination via Kalman Filtering of Gravity Gradients
+2. Precise Orbit Determination of Cubesats Using Duty Cycled GPS Observations
+9
+
+10
+3 Attitude Determination and Control System
+3.1 Overview
+The aim of the Attitude determination and controls system (abbreviated to ADCS) is
+to control the orientation of the satellite. This control system will have the following
+main modes:
+1. Detumbling Mode: As the satellite is ejected from the launch pod, it tumbles at
+very high angular rates along one or more axes. The detumbling mode aims to
+stabilize this rapid motion of the satellite and drive its angular velocity as close
+to 0 as possible.
+2. Active pointing mode: Here, a direction will be commanded to the satellite where
+it is required to point. Examples: the hyperspectral imager must face the earth
+while recording data, the antenna must face earth during pass-periods, solar
+panels must face the sun while charging.
+Attitude control can be achieved actively by the use of actuators such as thrusters,
+reaction wheels, or passively. Passive attitude control involves leveraging the earth’s
+gravity field gradient to orient the satellite in 4 stable states. Another way is to use a
+magnet along a suitable axis such that the end product is the satellite pointing in the
+preferred direction. However, passive attitude control is very limited in the orientations
+it can achieve due to the lack of actuators. In such a case, a mechanism is needed if
+there is a need to point in any other direction which again causes the need for actuators.
+The pointing accuracy of such systems is also limited due to oscillations around the
+stable state.
+Due to these reasons, it was decided to employ an active attitude control system.
+This can be done through:
+1. Thrusters: These involve liquid and gas propellants which are limited, can leak
+and are very expensive and complex to develop at a student level. They also pose
+the issue of imparting too much impulse making them unsuitable for delicate
+maneuvers, and may cause translational motion of the satellite if not balanced
+out properly. Hence this is immediately discarded as an option.
+2. Magnetorquers: The satellite will be fitted with magnetic coils along each axis
+through which current will be passed. This will cause each magnetorquer to
+10
+
+11
+develop a magnetic moment, and its interaction with the earth’s magnetic field
+will impart a torque on the satellite which will cause it to rotate. The amount
+of current through each magnetorquer rod will be varied so as to vary the total
+magnetic moment produced, and in this way the torque on the satellite can be
+controlled. This system has the advantage of being simple to be mathematically
+implemented, but is limited as it can never completely drive the angular velocity
+along all axes to be zero, imparts relatively lesser torque and is also extremely
+expensive to use COTS parts.
+3. Reaction wheels: This works on the principle of conservation of angular momen-
+tum. In space, when the reaction wheel moves in one direction, the spacecraft
+rotates in the opposite direction. One reaction wheel can be fitted along each
+axis to control it. This system has the advantages of being able to provide larger
+amounts of torque and ensure larger degrees of accuracy and precise pointing
+control, while being relatively less expensive to fabricate in-house. Their disad-
+vantages are very high mathematical complexity (equations of motion, control
+law, moment of inertia and other properties calculation), desaturation require-
+ments, mechanical complexity (presence of moving parts, reducing size to fit in
+limited space).
+From all these considerations, it was decided that a combination of magnetorquers and
+reaction wheels would be used to control the attitude. The magnetorquers would be
+used to detumble the satellite, and for precise pointing, reaction wheels would be used
+(after the satellite has detumbled). The magnetorquers will also be used to desaturate
+the reaction wheels.
+Various configurations of reaction wheels can be used. The most common is 3, one
+along each axis to control it. However, this doesn’t provide redundancy and if one
+reaction wheel fails the entire system will break down. For this purpose, a combination
+of 4 reaction wheels will be used. The current idea is to arrange them in a tetrahedral
+fashion, so as to ensure equal load on each one of them and for more stability. However,
+depending on the results of simulations and actual testing, this could be adapted to
+pyramidal configuration/any other configuration that gives better results too.
+11
+
+12
+Fig: Tetrahedral configuration of reaction wheels
+This system can further be split into two subsystems: attitude determination system
+(ADS) and attitude control system (ACS). The ADS deals with determining the current
+orientation of the satellite based on sensor data, while the ACS focuses on bringing it
+to the required configuration.
+3.2 Attitude Parameters
+Here, the error in the satellite orientation is driven to zero by a dedicated control
+system.The attitude error can be measured in terms of various parameters such as:
+1. Euler angles: A reference frame can be reach another orientation through a
+sequence of angles is called Euler angles, and can also be used to indicate the
+difference between two refererence frames. The most commonly used sequence
+is 3-2-1 (yaw, pitch, roll) which corresponds to rotations about the Z, Y and X
+axes in that order. Other sequences such as 3-1-3, 1-2-3 are also possible. Once
+these Euler angles are obtained, a direction cosine matrix (DCM) is constructed
+to represent the rotation from one frame to the other. However, this approach
+has an issue: it gives rise to singularities (where it is not possible to uniquely
+identify an Euler angle from a DCM), and specific rotation sequences can give
+rise to a situation where two axes align with each other and as a result one degree
+of freedom is lost, a phenomenon known as gimbal lock. Due to these issues, a
+better parametrization needs to be looked into, which avoids singularities and
+gimbal locks.
+12
+
+13
+2. Principle rotation parameters: These consist of a unit vector specifying a rotation
+axis, and an angle specifying how much to rotate about that axis. However, this
+parametrization has singularities too, the easiest example is when the angle is 0
+- direction vector could be anything.
+3. Euler’s parameters: This achieves parametrization by encoding the rotational
+axis vector and angle into unit quaternions. These have the advantage of not
+having any singularities. However, they need to be normalized (ensure that they
+have unit magnitude). This constraint becomes of additional importance while
+implementing a numerical integrator and there need to be checks at each step to
+ensure that the quaternion still has unit magnitude, else the error will eventually
+blow up and cause errors in all the calculations.
+4. Classical Rodrigues’ Parameters: These are defined as the ratios of the imagi-
+nary components of a quaternion to the scalar component. These give rise to
+singularities but do not require normalization at each step.
+5. Modified Rodrigues Parameters: These also contain singularities, but provide
+the advantage of redundancy. For every set of MRPs to describe an orientation,
+there also exists an alternate set of parameters (called shadow set) that describes
+the same attitude. These two sets can be switched back and forth as and near
+singularities to avoid them.
+After analyzing all these parameters, quaternions were chosen to represent attitude.
+The main advantage provided by them is the complete absence of singularities, ensuring
+very reliable parametrization. However, normalization will have to be ensured at every
+step involving quaternion calculations.
+3.3 1 DoF Simulation
+Owing to the complexities involved in designing a control system for a 3D satellite, it
+was decided to first model a 1 DoF system first. The system can be summarized as a
+satellite body which can rotate only about one axis, and there is a motor connected
+to a wheel which can also rotate along the same axis. An angle is commanded to the
+motor by which the satellite must rotate, and this is achieved through a simple PID
+controller. This model was implemented in Simulink.
+13
+
+14
+Fig: Results of simulation with commanded angle 0 radians
+Fig: Response of simulation with commanded angle 0 radians
+The working of this system is as follows:
+14
+
+15
+1. A reference angle is fed to the controller, and the difference is calculated with
+the measured signal. This represents the error.
+2. The error is the input for a PID loop whose output represents the input voltage
+commanded to a DC motor.
+3. From the transfer function and using the equations of a DC motor, with a little
+mathematical manipulation we get the angle rotated by the motor shaft.
+4. This is converted to the torque provided by the motor through the motor torque
+transfer function.
+5. The disturbance torque is added to get the total torque on the satellite. Through
+the transfer function of the satellite equations of motion, we get the angle rotated
+by the satellite from the total torque on it.
+6. This is then measured by the sensor, and fed back to the loop.
+After successfully simulating this 1 DoF system and an understanding of control sys-
+tems, it was decided to move on to the 3 DoF simulation.
+3.4 Magnetic B-dot controller
+For detumbling, magnetorquers will be used along X, Y, Z axes. The control law
+obeyed will be the B-dot controller. This law controls the magnetic moment of the coil
+in response to the angular velocity and the earth’s magnetic field at that point. The
+equations for a magnetorquer are:
+µ −→ −→
+M = nAiM
+Magnetic moment equal to the product of number of turns, area and current
+−−→ −→
+MM = S (µM) (⃗q)
+Net torque produced is cross product of magnetic moment and magnetic field at that
+point from the satellite reference frame
+15
+
+16
+The standard B-dot proportional controller follows the control law:
+µ −→
+B = kS ω −−→ − →
+B/I BI (⃗q)βI
+Control law
+In this control law, the magnetic moment generated by the torquer coils should be
+equal to the cross product of the satellite’s angular velocity and the magnetic field of
+the earth at that point (in body frame), multiplied by a constant which is the gain
+factor and requires tuning. It can be seen that the resulting torque vector obtained
+from the cross product of the magnetic moment and the magnetic field at that point,
+points to the opposite direction of the angular velocity of the satellite, thus reducing
+it and resulting in detumbling. From this diagram it is also evident that if the angular
+velocity is not exactly perpendicular to the magnetic field at all times, there will be a
+component of the angular velocity that cannot be driven to 0. Hence the amount of
+precision and control that can be achieved through magnetorquers is limited.
+Fig: Vector diagram of control law
+Simulations were run using a gain factor of 67200 (calculated through various param-
+eters of the satellite and manual tuning), and the following results were obtained:
+16
+
+17
+Fig: Euler angle variation with time, through magnetorquer control
+Fig: Variation of angular velocity components with time, through magnetorquer
+control
+These results show that while the time taken is larger, magnetorquers can be used
+to successfully detumble a satellite. The actual angular velocity can be controlled to
+within 5 radians/sec. Here there is scope for further improvement, which we hope to
+achieve by improving the tuning parameters.
+3.5 3 DoF Reaction Wheel Simulation
+In this simulation, we started out with 3 reaction wheels, each oriented along one of
+X, Y, Z axes. The attitude error is parametrized through Euler angles, and a PID
+controller is used to drive the attitude error to 0. Detumbling and pointing control
+can both be achieved through reaction wheels, but magnetorquers will be used as the
+17
+
+18
+primary detumbling mechanism while reaction wheels are used to orient the satellite
+in a specific direction.
+The control algorithm works in the following steps:
+1. The initial position, orbital velocity and angular velocity is set up. The equations
+of motion around the sun have already been programmed, hence this will simulate
+a circular inclined orbit along the sun. It can also be modified and tweaked to
+exactly fit the orbit more accurately.
+2. The initial configurations of the inertia for the satellite and reaction wheels are
+calculated. Conversions need to be performed to compute the total moment of
+inertia of the satellite from the individual reaction-wheel frame moment of inertia
+of reaction wheels and body.
+3. Error is added to the data (bias and noise) to simulate sensor coloring of data,
+and an exponential smoothing filter is applied to this data.
+4. The state of the satellite (XYZ coordinates, angular velocities, reaction wheel
+angular velocities) are stored in a state vector.
+5. These are then fed into a numerical integrator. The integrator implemented in
+this case is the RK-4 (Runge Kutta 4) integrator, which was chosen because the
+values outputted are closer to the real function than other options like Euler’s
+integrator. The integrator integrates the states of the satellites and outputs the
+angular velocities, accelerations, quaternion state derivatives and translational
+velocity and acceleration of the satellite.
+6. The controller block implements an Euler-angle based PD controller. The differ-
+ence between the reference and measured Euler angles is fed into the proportional
+factor, while the difference between commanded and measured angular velocity
+is fed into the derivative block.
+7. The resultant output of the PD controller represents the command torque to the
+reaction wheels. From this, the commanded angular acceleration is computed
+and from that we can indirectly find the angular velocity required per wheel.
+8. The resulting states are again measured and the loop continues to drive the error
+to 0.
+18
+
+19
+−→
+M desired = −kp(ϵi −ϵdesired) −kd(ωi −ωdesired)
+Command law for controlling reaction wheels
+=JT J JT−1 M ⃗
+desired
+Matrix calculations to compute commanded angular acceleration from commanded
+torque
+The results of the simulations show that reaction wheels successfully can be used both
+detumble and control the satellite attitude directly.
+Fig: Detumbling through magnetorquers followed by reaction wheel control
+(commanding to point to Euler angles 1, 0, 0 radians)
+Very high degrees of precision can be achieved through reaction wheels (pointing accu-
+racy of upto 0.005 radians) which is sufficient resolution for the hyperspectral imager
+payload. Thus, the choice of control system actuators has been validated through
+19
+
+20
+simulations.
+It is observed that a skewed arrangement (with the third reaction wheel pointing
+in (1, 1, 1)) instead of along any of the standard axes) drives the angle error to zero
+considerably faster.
+This concludes the work done so far on the attitude control subsystem. Next up is
+the attitude determination subsystem.
+3.6 ADCS Test Rig
+To validate the tetrahedral arrangement of the reaction wheels, a test rig is being
+constructed. The four reaction wheels will be mounted on an aluminum plate mounted
+on a bearing. These wheels will be run using BLDC motors. Further the ECS, a
+microcontroller (like Arduino), gyroscope sensors will be arranged on the plate to test
+the control algorithm. We will be using a COTS bearing and wheels, however most
+other parts bar the avionics will be manufactured in-house. We plan to finalize the
+design and complete the manufacturing for the tetrahedral reaction wheel arrangement
+test rig in the next three weeks. If the ADCS algorithm works well, we’ll proceed with
+optimizing the design for the CubeSat dimensions or we shall proceed with working on
+a different arrangement for the same.
+3.7 Attitude Determination System
+This part of the ADCS is focused on finding the error between the reference frame
+and the satellite body frame. the reference frame in this case can be taken to be
+an NED (North,east,down) centered at the satellite itself while the satellite frame is
+the frame attached to the center of satellite and rotates along with it. The relative
+difference between frames can be calculated through various algorithms, like TRIAD
+method (where 3 vectors are used to calculate an intermediate reference frame), QUEST
+method, Davenport’s q-method (utilizing quaternions) etc. The satellite will be fitted
+with sun sensors, star trackers and horizon sensors to return vectors that can be used
+in the Attitude determination algorithms. these algorithms have not yet been imple-
+mented by us, and are on the ADCS queue as of now. We will begin developing them
+as soon as the ADCS test rig is successfully completed.
+20
+
+21
+3.8 Potential problem areas
+1. Magnetorquers cost upto Rs. 60k per piece, Helmholtz cage is even more expen-
+sive. In case we go for COTS magnetorquers we will require funding.
+2. Technical guidance and assistance for the control system design. Need for a
+detailed rigorous mathematical analysis of the control system: potential insta-
+bilities, poles, dealing with non-linearities through usage of Lyapunov function,
+etc.
+3. Manufacturing: There is always a level of difference between sims and reality, and
+no matter how perfect the sims seem, they might not produce the same results
+with the control algorithms implemented on an actual physical system. In such
+a case, guidance would be required to analyze and fix why the system is not
+responding as expected.
+4. Designing the test rig to be power efficient.
+5. Scaling down from the test rig to the actual system present on the satellite.
+3.9 Further Work
+After successfully simulating a reaction wheel +magnetorquer attitude control system,
+the following improvments are planned for the model:
+1. Change configuration to tehrahedral and accomodate 4 reaction wheels.
+2. Change controller from Euler angle error based to quaterion based.
+3. Experiment and track the performance of various different arrangements of re-
+action wheels to either validate the choice of tetrahedral arrangment of reaction
+wheels, or to pick a better one.
+4. A test bed is in the process of being designed to test the reaction wheel algorithms.
+More details on this will be discussed in the mechanical subsystem.
+5. Research needs to be conducted on in-house manufacturing of a Helmholtz cage
+and magnetorquers will have to be looked into for the purpose of testing the mag-
+netorquers, as COTS components are extremely expensive. If this isn’t possible,
+funding sources will need to be looked into.
+21
+
+22
+6. Develop attitude determination algorithms.
+7. Develop actual flight controller code to be uploaded to the onboard microcon-
+troller.
+8. Map pointing modes to actual orientations of the satellite at various points in
+orbit.
+3.10 References
+1. Single-axis PID
+2. Elementary spacecraft kinematics
+3. Aerospace mechanics textbook (source of equations)
+4. Repository from which code has been extensively borrowed/referred to while
+creating the sim
+5. 3 DoF PID control system
+22
+
+23
+4 Communications
+4.1 Overview
+1. To finalize thge entire comms system custom to the imager payload, in the
+NEMOlite mission.
+2. use this mission to test and demonstrate the hardware and link in orbit and
+successfully implement the same for the actual mission :NEMO (2025)
+3. Make changes, if any, after successful review on ground for the final mission:
+NEMO(2025)
+4.2 Communication requirements of NEMOlite
+1. Should be able to downlink hyperspectral images (35MB before compression).
+Expected data speed: 2-3 Mbps
+2. Should broadcast beacon and telemetry (which consists of health and housekeep-
+ing data)
+3. Should have a full-duplex connection.
+4. Pass time will be approximately 22 mins/day (sun-synchronous orbit)
+5. SHould be low-power as computing will take some effort as well
+6. Hardware should comply with the inhouse space constraint.
+4.3 Current understanding of the communication stack
+1. An application on the sattelite would like to downlink an image file. First the
+image data is sent using a network layer protocol like Cubesat-Space-Protocol.
+2. Now, with the data-link layer protocols like AX.25, FX.25 or a CCSDS imple-
+mentation, at first the data is framed and then the forward-error-correction is
+added which is passed on to the physical layer.
+3. In the physical layer, the frames are received as a continuous bit-stream. This
+digital data is modulated on an analogue carrier wave using methods like QPSK,
+8-PSK and 16-APSK.
+23
+
+24
+4. This signal from the transceiver is then amplified and sent to the antenna.
+5. The uplink happens similarly, but in this case mainly commands are sent for
+telemetry/other subsystem functioning/payload functioning. Possibility of a UH-
+F/VHF uplink is to be explored.
+6. The uplink happens similarly, but in this case mainly commands are sent for
+telemetry/other subsystem functioning/payload functioning. Possibility of a UH-
+F/VHF uplink is to be explored
+7. In the ground station, the signal is first received by the antenna and is filtered
+then low-noise amplified, after which it is down-converted to a lower frequency
+to make processing easier.
+8. A de-modulator outputs a bit-stream which is sent for further processing to the
+decoder to extract the data frames and then the packets. The decoder also checks
+for errors and tries to fix the corrupted bits.
+9. The command signal received on board follows a similar path with the use of
+onboard hardware and software implementations
+4.4 Current Progress
+1. Researched how other CubeSat teams implemented their comms stack
+24
+
+25
+2. Learned about the OSI Model and what each layer corresponds to
+3. Researched various protocols used at each layer (physical, data-link, network)
+4. Found some open-source hardware designs for the VHF/UHF/S band radio and
+circuits
+5. Continuing with courses (Sat Comms NPTEL) and reading textbooks (Digital
+Satellite Communications - Tri H Tia) on satellite communications
+4.5 Problems
+1. Given the fact that none of the members have taken any communication course
+formally and are still in their second-year, a lot of the material available is difficult
+to understand
+2. There is uncertainty about some licensing issues for working in the amateur bands
+or near S-band (requirement of HAM license which takes 2 years to procure, which
+will massively delay the project).
+3. We are unable to plan out a proper roadmap to work further on this subsys-
+tem due to the involvement of many domains (example-RF circuitry, computer
+network layers, etc)
+4. Uncertainty regarding funding sources
+5. Testing and validation of proposed sub-system design
+4.6 Ground Segment of the Communication Subsystem
+The ground station will be built in two stages, first is receive only omnidirectional
+ground station (OGS) capable of receiving high-powered signals only. Station will be
+set up in-campus, and will be SatNOGS compatible. Once OGS is established, we
+will move to building a directional ground station (DGS) that has both sending and
+receiving capabilities, and can send and receive low-powered signals too.
+25
+
+26
+4.6.1 Proposal
+1. To design and assemble a SatNOGS compatible omnidirectional ground station
+which can be used by all the students of BITS to get data from national and
+commercial satellites.
+2. This will be a learning experience for the students which will lead on to the
+development of a directional ground station for the NEMOLite project to follow
+the satellite as it passes through.
+3. When completed the omnidirectional ground station will be one of the few SatNOGS
+compatible ground stations in India.
+4.6.2 Methodology
+1. Consists of the VHF antenna, the FM-band stop filter, LNA, RTL SDR (Software-
+defined radio) and the Raspberry pi.
+26
+
+27
+2. Will be mounted on top of the student activity center, as this location is far away
+from sources of interference (shielded by concrete) and has LAN connectivity
+nearby.
+3. Waterproof shelter for the raspberry pi, which is powered by an UPS unit.
+4. Raspbian image provided by satNOGS ( An open source network of satellite
+ground stations which anyone can use, designed as a participatory project under
+the Libre Space Foundation ) for interfacing to their network.
+5. Inputting ground station specific information like elevation, station ID, SDR gain,
+etc.
+6. SoapySDR server set up, and software written to allow incoming requests from
+users of the station during overhead satellite passes.
+7. Benchmarking the station’s performance using NOAA transmissions.
+4.6.3 OGS Usage
+1. Raspberry pi in sleep mode until a request is made by a user on BITS-LAN.
+2. Boot, then begin receiving transmissions
+3. User can either request unprocessed data, or processed data, the processing for
+which will be done on the raspi itself.
+4. Processed data available only for a few select transmissions, as the format of the
+incoming data will differ for different satellites.
+4.6.4 Current issues with Ground segment
+1. Facing project clearance issues for OGS even though license is not required for
+receiving satellite data.
+2. Would need help with hardware review, mainly the antenna segment as no COTS
+antenna is available to buy, hence we might have to fabricate our own.
+3. Technical guidance might be required to make pointing algos for DGS.
+27
+
+28
+4. For DGS, HAM license is required (to be able to send communication). Process
+is long-drawn, takes upto 1 year or more to get a lincense after giving the exam
+which will massively delay the project.
+4.6.5 OGS Budget
+Sn. no Hardware Quantity Price (in rupees) Total price
+1 WiMo TA-1 1 7,505.00 7505
+2 Raspi 4B 8GB 1 6849 6849
+3 SPF-5189 LNA 1 291 291
+4 CoAX 15m 2 499 998
+5 LAN Cable 1 300 300
+6 RTL-SDR FM band-stop filter 1 1259.57 1259.57
+7 R820T2.RTL2832U 1PPM TCXO SMA 1 4707 4702
+Total 26909.57
+4.6.6 Addressing possible concerns
+1. Wi-Fi interefenrence. To avoid interference from BITS public WiFi, a location
+out of range of Wifi signals has been selected.
+2. FM Radio Interference: In order to minimize the effects of interference from FM
+signals, an FM bandstop filter is used after the antenna.
+3. Transmission Line Interference: As the SAC is close to electric power lines,they
+may be source of interference due to EMF. The selected location has been selected
+as far as possible from these.
+4. Weather conditions: The RPI and all other weather-sensitive components will be
+housed in a sturdy shelter.
+5. Formal Permissions: As this SATNOGS station is receive only, there will be no
+legal issues. Source : https://www.indianhams.com/swl.html
+4.7 References
+1. Omnidirectional Station How To
+28
+
+29
+2. OreSat Live Handheld Ground Station
+3. Team Anant (Birla Institute of Technology and Science, India) 306
+4. Design and Implementation of the Communications Subsystem for the Cal Poly
+CP2 Cubesat Project
+5. OVERVIEW OF SPACE COMMUNICATIONS PROTOCOLS
+6. SPACE DATA LINK PROTOCOLS—SUMMARY OF CONCEPT AND RA-
+TIONALE
+7. Design and Implementation of a Reliable Transport Layer Protocol for NUTS
+8. Low cost S Band communication system design for nano satellites
+9. HamTV Experiment on-board ISS
+29
+
+30
+5 Command and Data Handling
+5.1 Overview
+The CDHS of the CubeSat deals with the building the primary onboard computer
+(OBC) of the CubeSat. This computer will perform the following important functions:
+1. Coordinates the functioning of all the other subsystems
+2. Monitors the overall health of the satellite, transmits critical housekeeping data
+3. Logging data
+4. Payload processing (process hyperspectral imager data, run algorithms)
+5. Deployment of antennas, solar panels (if designed in such a way)
+6. Selecting most appropriate mode of operation depending on the resources avail-
+able
+5.2 Design Considerations:
+The CDHS and selected onboard microprocessor should have the following features:
+1. Resilience: ability to recover from catastrophic breakdowns by giving the system
+workarounds at the time of development
+2. Reliability: the system is capable of self-diagnosing critical errors and redundant
+circuitry, which, at the point of failure, allows the system to prevent any mission
+interruptions needing operator intervention.
+3. Minimal number of single points of failure.
+4. Mechanical Resilience: Should be able to withstand wide range of temperatures (-
+200°C to +150°C), forces at launch, rotational acceleration and intense vibrations
+periodically and still be functional.
+5. Electronic Resilience: Reduced chances of bitflips due to collision with cosmic
+particles, can be achieved through radiation hardening. This could push up costs
+by a lot, hence error detection and correction mechanisms are necessary.
+6. Software Resilience: The software must be resilient to errors within it.
+30
+
+31
+5.3 Development:
+For development of the flight software, the following approaches were identified:
+1. Baremetal + RTOS
+2. Flight Software Frameworks
+5.3.1 Baremetal + RTOS
+Here, the microcontroller would be directly programmed, along with real time oper-
+ating system running on it. This sort of approach gives the maximum amount of
+freedom, but is also hardest to implement since bare metal programming refers to low
+level programming that is hardcoded to the system (microcontroller/microprocessor)
+at hardware level without any abstraction layer. The main job of bare-metal pro-
+gramming is to set up the initial processes of the system and act as a focal point of
+synchronization of various subsystems. It is similar to a bootloader or firmware. The
+direct code connects all the components of the device, initiates initialization processes
+and helps in synchronization of all the subsystems.
+Here, embedded programming in C was explored, where various programs were writ-
+ten directly to the AVR Atmega328p microcontroller using a programmer. These
+included writing directly to registers, PWM, setting timers, serial TX-RX communi-
+cation, writing and controlling external interrupts and heavily relied on understanding
+the datasheet of a given microcontroller.
+While most of the embedded programming basics were learnt on an AVR chip, the mi-
+crocontroller that is being preferred for the final mission is ARM-based STM32. This
+is due to its multi-threading capabilities and ability to run real-time operating systems
+like FreeRTOS and even operating systems like Linux.
+Advantages:
+• Software is optmized for particular hardware requirements.
+• Provides programming flexibility and customization as per the requirements of
+various subsystems.
+• Synchronization of all subsystems.
+31
+
+32
+• Require less memory and is power efficient since the code is customized to the
+requirements of the system.
+• Time required to boot up the system is low compared to general devices.
+Disadvantages:
+• Debugging requires time and effort.
+• Setting up of devices is not easy since everything is done manually.
+• Not much literature around bare-metal debugging in general.
+• Since the code is heavily chip dependent, until the chip is selected the develop-
+ment of the software can’t be started.
+References:
+1. CubeSat Software Design
+5.3.2 core Flight Software (cFS) - NASA
+The usage of NASA cFS as a potential flight software framework was explored. Al-
+though cFS is an extremely capable framework with flight heritage, its utility in a small
+satellite mission like ours is minimal. With its semi-open source model with periodic
+releases, a lot of tools and scripts available for previous versions are not available for
+the current one, smaller community size, lack of strong documentation and tutorials
+and make working with cFS needlessly difficult. While some plugins do exist, no com-
+plete flight software implementation using cFS is openly available online. Apart from
+this, its use of C and the absence of a Standard C++ API make development a diffi-
+cult endeavour. While no decision has been taken yet, owing to uncertainty regarding
+hardware and software development capabilities, the usage of cFS as a FSW framework
+seems unlikely.
+5.3.3 F’ (F prime) - NASA
+Overview: F prime is a modular framework that enables rapid development and
+deployment of spaceflight and other embedded software applications. Originally devel-
+oped at the Jetson Propulsion Laboratory, F’ has been successfully deployed on several
+32
+
+33
+space applications. It is tailored but not limited to small-scale spaceflight systems such
+as CubeSats, SmallSats and instruments.
+• An architecture that decomposes flight software into discrete components with
+well-defined interfaces
+• A C++ framework that provides core capabilities such as message queues and
+threads
+• Modelling tools for specifying components and connections and automatically
+generating code
+• Testing tools for testing flights software at the unit and integration levels
+F-prime has design first approach i.e to start development a developer should design
+any unique ports that the component will need.If desired, the port can be built and
+compiled to ensure that the design is correct. Then we have to create components using
+those Ports and then the Events and Channels. The developers writes the structure
+in FPP (F prime prime) and the compiler auto generates the implementation stubs in
+C++ to be filled up by the developer. The same structure is followed for writing the
+unit tests, which is a must for developing such a intricate and large scale software.
+Flight history of F-prime:
+1. Inguenity Mars Helicopter
+2. ISS RapidScat
+3. ASTERIA CubeSat
+4. Flashlight CubeSat
+Advantages:
+1. Gives a structured approach for developing the CDHS by its Port,Component
+and Event structures.
+2. F-prime has an inbuilt tool for testing flight software which is a necessity to ensure
+proper working of the code. In F-prime we can use automatically generated test
+instead of writing them on our own.
+33
+
+34
+3. F-prime has relatively larger community base then other alternatives like cFS
+and CubeOS.
+4. Already provides a Ground Control Software with a GUI which will have all the
+commands we define and relay the events from the CubeSat too.
+5. Supported for various embedded systems.
+Disadvantages:
+1. Adds an overhead on the processor and takes more power than baremetal pro-
+gramming.
+2. Adds an extra layer of complexity and syntax to be learnt and taken care of
+which is tedious and time consuming.
+References:
+1. F Prime: An Open-Source Framework for Small-Scale Flight Software Systems
+5.4 Further work:
+After having explored various flight software frameworks and the basics of bare-metal
+microcontroller programming, the following work is planned ahead:
+1. An extensive literature review exploring theses written by other student CubeSat
+teams on the design and development process of a flight computer.
+2. Exploring the flight code of Melbourne Space Program’s ACRUX1 satellite.
+3. Selecting microcontroller to be used during the final mission, making the choice
+between a microcontroller and a microprocessor (such as RaspberryPi).
+4. Choosing framework, if any.
+5. Learning ARM programming and implementing parallel processing functionalities
+and data structures such as multi-threading, mutexes, semaphores, queues.
+6. Implementing a small-scale project like an RC-car designing the software to utilize
+functionalities similar to the satellite (communication protocols, power modes,
+etc) to familiarize the team with selected tool-chain.
+34
+
+35
+7. Split the team and assign one CDHS member to every other subsystem. Each
+of these members will be tasked with deeply understanding that particular sub-
+system, figure out integrations and solve the challenges involved. After each
+subsystem is coded and unit-tested, the team will re-group to integrate the en-
+tire flight software.
+5.5 Challenges:
+1. The biggest challenge that is preventing further progress is the difficulty in final-
+izing the tool-chain to be used. This is due to uncertainty in power availability
+constraints, and the sheer amount of choices available. For instance, even if
+the STM32 microcontroller is finalized, there are 50+ types of STM32 boards
+available. This makes deciding the hardware very difficult, and given that the
+programming is so low-level, it is very hardware-dependent and without selecting
+the tool-chain, it is very difficult significant progress on this front.
+2. In the literature review, a lot of advanced concepts that draw upon courses like
+operating systems which haven’t been learnt by second year students yet. This
+causes difficulty in understanding a lot of these concepts in detail and thus overall
+lack of clarity on what needs to be done.
+35
+
+36
+6 Electrical Power System
+6.1 Overview
+The electronics and power supply subsystem deals with the actual hardware and cir-
+cuitry of the satellite, and power management. A high-level block diagram of the
+satellite was conceptualized to describe the flow of data and connections of the various
+components.
+It was decided to have custom ICs in places to perform special functions such as
+error detection and correction, watchdog timer, reporting current and battery levels.
+6.2 Satellite circuitry block diagram
+The satellite block diagram is available for reference here.
+1. There are 4 separate block, each of these represent one of the modules in the
+internal stack of the CubeSat.
+2. Critical subsystems module contains the main onboard computer
+(a) The main OBC performs a lot of important functions, including but not lim-
+ited to: scheduling various operations, sending data to downlink, processing
+and acting on uplinked telecommands, logging critical data, memory man-
+agement, supervising other microcontrollers, etc.
+(b) The data coming from the CAN bus to the main OBC is passed through
+a scrubber circuitry to perform error detection and correction. However,
+the reliability of the inbuilt error correction mechanisms of the CAN bus
+will first be evaluated, and if deemed necessary this redundancy will be
+implemented.
+(c) A watchdog timer is also connected to the OBC.
+3. The comms module consists of a VHF uplink and a UHF + S band downlink
+(UHF for payload data, S band for telemetry and beacon). The signals picked up
+by the antennas are amplified and converted into SPI compatible packets, and
+sent to the main OBC.
+36
+
+37
+4. The power subsystem will consist of solar panels that charge the batteries. These
+batteries will power the power bus that powers the rest of the microcontrollers
+and any other power-consuming sensors/actuators.
+5. The power systems controller board keeps track of how much power is consumed
+by each board, and calculates how much power to supply where. If any component
+uses excessive power, it notifies the main OBC which communicates with the
+excessive consumer to get what task is being performed by it. If it is essential, it
+is allowed to continue else the process is suspended.
+6. The ADCS block will contain its own microcontroller, which will interface with
+the sensors. Due to the computationally intensive nature of the ACDS algorithms,
+there will be separate microcontrollers to run the star tracker, attitude control
+and GPS algorithms. These will be connected to the main ADCS microcontroller
+which will be responsible for actuation of the signals received from the other
+microcontrollers, and will directly control the magnetorquers and reaction wheels.
+The science and data memory will be stored in a 16 GB eMMC flash drive. This
+will mainly save the recorded and compressed/processed images.
+7. The actuator board is mainly for deploying antennas through the means of burn
+wire actuation once the satellite is in orbit and detumbled.
+8. All the modules are powered by the power bus which will be a high voltage line
+(voltage line will in turn draw its supply from the batteries).
+9. All modules are also connected to a system-wide CAN bus which will be used
+for inter-module communication. It will be used mostly for the other modules
+to communicate with the main on-board computer. However, within a module,
+the communication protocol used is SPI/I2C/UART. Whatever the choice of
+communication protocol is, it is maintained throughout for ease of scheduling.
+However, it must be noted that these designs and diagrams are very tentative. At the
+time of creation, not much research had been conducted into the physical feasibility,
+availability and compatibility of these mentioned components. Hence, if at any point
+during the development of the satellite it is felt that there are better designs possi-
+ble/limitations of existing components/designs are discovered, changes will be made
+accordingly.
+37
+
+38
+6.3 Design of Custom ICs
+A few custom ICs are being designed for specific purposes. The details are discussed
+over here.
+1. Watchdog timers: This timer sends out a pulse to the microcontroller every fixed
+time period. The main function of this is to ensure that the microcontroller is
+still operating and has not gone into an unresponsive state. They are used to
+immediately detect and diagnose any faults before they crash the entire system.
+A simulation of a 555 watchdog timer has been created using EagleCAD.
+2. Scrubber circuitry: To detect and reverse bitflips caused by cosmic rays in space
+3. Solar panel current: Measures total amount of current entering the circuit over
+a period of time and converts data into SPI-transmissible format.
+4. Battery level: Measures how much power left in battery, if it is below a criti-
+cal threshold then it notifies the main OBC which shuts down all non-critical
+processes. Simulation has been created using EagleCAD.
+6.4 Methodology Adopted in Circuit Design
+For the design of any circuit related to CubeSat, the following design methodology was
+agreed upon and adopted:
+Fig: Circuit design methodology
+38
+
+39
+The main philosophy behind going in such a sequence is for easy detection and isolation
+of errors and bugs. Any time a particular step does not give expected results, the
+mistakes can be traced back through the various stages of this flow chart and makes it
+easy to pinpoint where the error lies.
+1. First, the circuit is simulated in LTSpice. This step is repeated till the simulation
+gives expected results.
+2. Once this step is completed, we move on to breadboard simulations. If they
+don’t work, the simulation and breadboard circuit, both are checked for errors.
+This is again repeated till the expected outcome is achieved by the breadboard
+simulation.
+3. Once the breadboard simulation works, we can assume to a reasonable degree of
+certainty that the LTSpice simulation is correct. We now move on to the CAD
+mode, design the circuit PCB and test again.
+4. We keep checking the breadboard simulation and PCB for errors while this does
+not work.
+5. Once it works, the PCB is ready to be integrated into the CubeSat.
+6.5 Issues faced
+The following issues are being faced while working on this subsystem:
+1. One of the main and most important step in EPS is to select all the electronics
+components for the mission. Once this is done, the mechanical team can draw
+up a CAD model of the satellite, and power calculations can also be done.
+2. However, selecting components is not at all straightforward for the following
+reasons:
+(a) There are a lot of inter-dependencies leading to a deadlock. For instance,
+finalizing the total power supply estimates requires the selection of all the
+sensors and other components. However, finalizing these will require some
+idea on the total power supply available. Due to this, neither can proceed
+further.
+39
+
+40
+(b) Finalizing the microcontroller is a big task in itself. The STM32 board
+is being looked at as the primary candidate as the microcontroller of the
+entire system. But within STM32 as well, there are hundreds of options
+available and fixing a specific board becomes very difficult given the varied
+specifications of each board.
+Due to these reasons, we are unable to fix the components onboard the satellite. How-
+ever, this is an urgent issue for which we need guidance, so that other parts of the
+project are not held up. Fixing the onboard components clears the way up for build-
+ing a CAD of the satellite, determining power requirements and availability, and also
+enables us to proceed with writing actual code for the microcontroller (since this code
+is very low-level, it is hardware-dependent and will vary from one microcontroller to
+the other).
+40
+
+41
+7 Mechanical System
+7.1 The Subsytstem and the Work Undertaken
+The mechanical system of the CubeSat is divided into two subsystems: the structural
+and the thermal subsystems. The structural subsystem is mainly concerned with the
+physical structure of the satellite, taking into account design and space considerations
+while the thermal subsystem ensures that the CubeSat stays in the specified thermal
+range, avoids overheating, etc. The workings of these subsystems is entailed in more
+detail next.
+7.1.1 Structural Subsystem
+The structures team of the mechanical subsystem work on the design, structural in-
+tegrity and space optimization for the part placement of the hardware systems within
+the Cubesat. Because the dimensions of the Cubesat are fixed and the basic structural
+design standard, the plan was to obtain the CAD of the COTS product and modify it
+according to the requirements. The primary structure will be made of aluminum. A
+mechanical team was recently formed and once the hardware is finalized, the subsys-
+tem shall start work on the part placement with space optimization. At the moment
+the team is working on the design and manufacturing of the ADCS test rig. Static
+structural and dynamic analysis of the structures will be performed on Ansys and the
+structure will further be optimized based on the results. The bigger challenge will be
+to experimentally test the structures under random vibrations to make sure that it will
+survive the launch conditions.
+7.1.2 Thermal Subsytem
+The thermal subsystem is important for proper functioning and longevity of the Cube-
+sat. The thermal system shall work in two steps, the external system and the internal
+system. The external system starts with the analysis of the operational conditions of
+the CubeSat in its orbit. This will be followed by the external structural analysis and
+an estimation of how this heat shall propagate within the CubeSat and affect the hard-
+ware elements. This analysis shall calculate the operational temperature for all the
+components within the CubeSat. The internal system includes the calculation of the
+heat generated by the components within the system. A thermal control system will
+41
+
+42
+then be developed to ensure that the conditions within the CubeSat are operational for
+the components. The thermal subsystem shall also look into the necessary insulation
+requirements for when the satellite is not under the sun to prevent heat loss.
+The thermal subsystem will need help in calculating the radiative heat fluxes on the
+body. This is necessary for both the thermal integrity of the CubeSat as well as for the
+power calculations from the solar panels for the power subsystem. The radiation from
+the sun as well as from the sunlight reflected off the earth will need to be calculated.
+There is also the radiation at infrared wavelengths that the Earth emits.
+The Mechanical subsystem was recently formed and is in the literature review and
+research phase. Once the ADCS test rig is completed, they will start work on the
+structural design as a parallel team with mechanical as well as physics students work-
+ing on the thermal calculations necessary. We will need guidance with the thermal
+calculations.
+We will also need help with conducting the structural and thermal tests. Vibrational
+analysis as well as thermal analysis will need to be conducted on the CubeSat.
+7.2 References
+1. Mechanical, Power, and Thermal Subsystem Design for a CubeSat Mission
+2. Mechanical, Power, and Propulsion Subsystem Design for a CubeSat
+3. CubeSat101: Basic Concepts and Processes for First-Time CubeSat Developers
+42
+
+43
+8 Remote Sensing and Image Processing
+8.1 Introduction
+The Remote Sensing and Image Processing team working under the CubeSat division
+at SEDS BPHC, had recently undertaken the task of imaging macro/micro plastic
+particles near the Gulf of Mannar region. We aim to develop a low cost imager that
+can provide us with data to perform further research on. We also wish to contribute
+the data open-source.
+8.2 Our Literature Review : Remote Sensing
+8.2.1 The basics of the problem
+To understand the problem we had to start with the very fundamentals of remote
+sensing.
+We understand that our problem is of a passive nature. Hence, our data collection is
+already reduced to about 12 hours in a sidereal day. The energy source illuminating
+our target would be direct sunlight. Our next problem was to determine the part of
+the electromagnetic spectrum we wanted to use for our mission case. Upon referring to
+the paper, ”Hyperspectral ultraviolet to shortwave infrared characteristics of marine-
+harvested, washed-ashore and virgin plastics” we determined that absorption features
+noted in marine-harvested microplastics are highlighted by the vertical lines (centred
+around 931, 1045, 1215, 1417, 1537, 1732, 2046 and 2313 nm).
+43
+
+44
+Figure 1: Reflectance minimas correspond to absorption maximas, which we are looking
+for to locate microplastics
+We therefore, would like to build our HSI in the NIR/SWIR range (roughly 780–2526
+nm).
+8.2.2 The functioning of the imager for the problem
+For our use case we would like to follow a polar orbit. The ability to follow a north-south
+orbit along with the west-east rotation of Earth enables us to cover most of Earth’s
+surface over a certain period of time. We would be following a sun synchronous orbit,
+which is a subclass in the near-polar orbit class. We would be using a SSO as it would
+enable us to cover each area of the world at a constant local time of the day called
+the local sun time. At any given latitude, the position of the sun in the sky as the
+satellite passes overhead will be the same within the same reason, ensuring constant
+illumination conditions when acquiring images. This is a very important factor for
+monitoring changes between images or even for mosaicking adjacent images together,
+as they do not have to be corrected for different illumination conditions.
+As our orbit is a near-polar orbit, our satellite shall be travelling northwards on one
+side of the Earth and then towards the southern pole on the second half of its orbit.
+These are also known as the ascending or descending passes. As our orbit is the SSO,
+the ascending pass is on the shadowed side of earth, while descending pass is on the
+sunlit side. And therefore the sensor will only record reflected solar energy on the
+descending pass. If we wish to image on the ascending passes we can opt for a passive
+system that records emitted thermal radiation or go for an active sensor.
+44
+
+45
+Also, as the satellite would be carrying the imager above the Earth’s surface we need
+to worry about the area that it would image, also known as the swath. If we start
+with any random pass over the Earth’s surface, an orbit cycle is said to be complete
+when the satellite retraces its path passing over the same point on the Earth’ surface
+directly below the satellite (that is the nadir point) for the second time. The time that
+it would take our imager to complete its orbital cycle would be its revisit period. To
+make the revisit time a bit shorter we can build a steerable sensor and view an area (off
+the nadir) before and after the orbit passes over a target. This is done quite frequently
+when the application is monitoring based, like an oil spill or monitoring movement of
+marine plastic.
+Another factor we need to understand is the fact that areas at higher latitudes will
+be imaged more frequently than the ones at the equatorial zone due to the increasing
+overlap in adjacent swaths as the orbits come closer together near the poles.
+8.2.3 What everything revolves around: the DATA Collection
+Spatial Resolution Well, our next worry is the spatial resolution, pixel size and
+scale. Our mission has a very sensitive aim and that is to image plastic particles, hence
+we need to design our imager in such manner to ensure good spatial resolution.
+The detail understandable in an image is dependent on the spatial resolution of the
+sensor. The spatial resolution of a sensor refers to the smallest possible feature that can
+be detected. As our sensor would be a passive sensor, our spatial resolution primarily
+depends on the IFOV, Instantaneous Field of View. The IFOV is the angular cone of
+visibility and it determines the area of the Earth’s surface that is visible.
+area measured = IFOV × distance of the sensor from the ground (2)
+This area on the surface is also known as the resolution cell and it is a sensor’s maximum
+resolution. This diagram below is very helpful in understanding a sensor’s field of view.
+45
+
+46
+Figure 2: IFOV vs FOV
+Now for a feature to be detected its size needs to be greater than or equal to the
+resolution cell. A small feature may not be detected unless its reflectance dominates
+within a articular resolution cell allowing sub-pixel or resolution cell detection.
+One important thing is to be able to distinguish between the concepts of pixel size and
+spatial resolution. If a sensor has a spatial resolution of 50m and an image from the
+sensor is displayed at full resolution, each pixel represents 50m × 50m. However, it is
+possible to display an image with a pixel size different to that of the resolution.
+Spectral Resolution Next up is the spectral resolution that we need to take care
+of. Although our use case is Hyperspectral, we still need to set a predefined spectral
+resolution or the jump between two wavelength values at which we can record data.
+Radiometric Resolution Understanding radiometric resolution is very important
+to understand the information content inside an image. Every time an image is acquired
+on film or recorded by a sensor, its sensitivity to the magnitude of the electromagnetic
+energy determines its radiometric resolution.
+In other words, it is the ability of the system to discriminate very slight differences
+in energy. The finer the radiometric resolution, the more sensitive our sensor is to
+46
+
+47
+detecting small differences in reflected or transmitted energy.
+The more bits in an image, the higher is the radiometric resolution. By comparing a
+2-bit image to an 8-bit image, you can notice the large difference in the level of detail
+discernible depending on the radiometric resolution.
+Temporal Resolution As the revisit period of a satellite like ours is a few days,
+the absolute temporal resolution is used to make sure the exact area at the same
+viewing angle is measured in the same period. The problem shall arise when there
+are overlaps in imaging swaps as discussed earlier due to increasing latitude. The
+factors determining the temporal resolution that need to be taken care of are the
+sensor capabilities, the swath overlap and the latitude.
+8.2.4 Our scanning system
+As our sensor would be electronic and not photographic, we will acquire data using a
+scanning system. We can either employ across-track scanning (whisk broom) or along-
+track scanning (push broom).
+A whisk broom scanner uses a rotating mirror to scan across track to collect data. It
+reflects the light onto a single sensor, and records the data one pixel at a time. A good
+example of this is a barcode scanner that uses a laser beam to scan the barcode. .
+A push broom scanner collects data along track using a row of sensors arranged perpen-
+dicular to the direction of travel. The data are collected row by row. A good example
+of this is a flatbed scanner used to scan photographs.
+For our use case we would be employing a push broom or along-track scanner. The
+along-track scanner uses the forward motion of the platform to record successive lines
+and build a 2D image. The array of detectors combined with the push broom motion
+allows each detector to ”see” and measure the energy from each ground resolution cell
+for a longer period of time. This allows for more energy to be detected and will im-
+prove our radiometric resolution. The increased dwell time will also facilitate smaller
+IFOVs and narrower bandwidths for each detector. Thus we can obtain better spatial
+and spectral resolutions without affecting the radiometric resolution. The complicated
+part is calibrating thousands of detectors to achieve uniform sensitivity across the array.
+47
+
+48
+Figure 3: Push Broom Scanning
+8.3 Imager
+8.3.1 Introduction
+The main objective of our project is to build and test a hyperspectral imager that
+will be used in a cubesat to detect and track microplastics off the coast of Gulf of
+Mannar[1]. During the course of our research, we have looked into a plug and play
+hyperspectral imager[2] as a test bench to get hands-on experience with recording
+, storing, analyzing and transmitting hyperspectral data locally to scale it up on the
+cubesat. The hyperspectral imager works off a principle called diffraction grating which
+synthesis or make the different wavelengths of react differently on the sensor to produce
+images of different bands.
+8.3.2 Building the Imager
+Using theiIdeologies from the plug and play hyperspectral imager[2], we plan on fabri-
+cating our own sensor in a similar fashion, using low-cost online equipment. It employs,
+for example, a Raspberry Pi 3 Model B+ (RPI) and a Raspicam NoIR v2.1. Further-
+more, they distribute the software in the form of an executable file that is compatible
+with almost any version of Linux (.Appimage [15]). Furthermore, the case’s compo-
+nents were printed using a thermoplastic 3D printer to reduce weight and cost. Because
+48
+
+49
+it is an alternative to sophisticated Computer Numerical Control (CNC) machines, this
+technology also saves time.
+The proposed HSI device can generate hyperspectral images with 116x110 pixels,
+up to 315 wavebands ranging from 400–1052 nm, and a file size of 35 Mb. This device
+weighs 300 g in total. These characteristics have been included in the comparison
+between the proposed HSI and the devices in the literature. The parameters of the other
+HSI devices can be found in the respective reference paper. This model outperformed
+the competition in terms of cost, weight, and spectral resolution.
+8.3.3 Testing Methodology
+In the scope of this project, we plan on testing the imager in different conditions and
+specifically test processing algorithms on board the computer.
+1. Mosaicking algorithms are an important part of generating larger images from
+small bands of images, algorithms such as SURF, FAST, SIFT , BF matchers are
+used to do so .
+2. Get hands-on experience of collecting and processing hyperspectral/multispectral
+data. Also, deal with its pre and post processing.
+3. Developing a scaled up yet cheap model to identify/locate/detect waterborne
+macro/microplastics using an imager in the NIR-SWIR band.
+4. Hyperspectral and multispectral image mosaicking using neural networks.
+5. Calibration and testing of hyperspectral imager mounted on a satellite(using a
+test bench)
+6. Transmitting and storing multispectral image data for communication test bench
+of Cubesat.
+8.3.4 Communication and Data Handling
+Working alongside the communications team , we will be testing, transmitting and
+collecting our data locally to test the amount of data we can transmit and generate a
+practical simulation of the delays and bands we will transmit our data on. Data storage
+is also vital , as the Satellite is only in range of our receivers over short durations and
+we need to micro-process the data such as removing duplicates and image compression
+49
+
+50
+so as to effectively and efficiently transmit the images one in range.The progress made
+on this front is bleak as we are yet to build our prototype imager to begin testing.
+8.3.5 Algorithm
+1. For the prototype, the algorithm for detection will follow the algorithm prescribed
+in [1], a SVM (Support Vector Machine) algorithm to identify microplastics in
+the seawater.
+2. As a supervised classification method, SVM classification models are generally
+developed based on the training set and then these developed models will be used
+to predict unknown samples.
+3. The mean spectrum for different objects (Microplastics) will be taken and input
+into the SVM model and then this model will be used.
+8.3.6 References
+1. Ruf, C. and Evans, M., “Detection and Dynamic Imaging of Ocean Microplastics
+from Space”, 2020. doi:10.5194/egusphere-egu2020-3120.
+2. Salazar-Vazquez, Jairo and Andres Mendez-Vazquez. “A plug-and-play Hyper-
+spectral Imaging Sensor using low-cost equipment.” HardwareX (2020): n. Pag.
+3. Toutin, Thierry. ”Geometric processing of remote sensing images: models, al-
+gorithms and methods.” International journal of remote sensing 25.10 (2004):
+1893-1924.
+4. Monno, Yusukex, et al. ”A practical one-shot multispectral imaging system using
+a single image sensor.” IEEE Transactions on Image Processing 24.10 (2015):
+3048-3059.
+5. Jiajia Shan, Junbo Zhao, Yituo Zhang, Lifen Liu, Fengchang Wu, Xue Wang,
+Simple and rapid detection of microplastics in seawater using hyperspectral imag-
+ing technology, Analytica Chimica Acta, Volume 1050, 2019, Pages 161-168, ISSN
+0003-2670, https://doi.org/10.1016/j.aca.2018.11.008.
+6. Yin, Qian & Guo, Ping. (2007). Multispectral Remote Sensing Image Classifica-
+tion with Multiple Features. 1. 360 - 365. 10.1109/ICMLC.2007.4370170
+50
+
+51
+9 Conclusion
+The benefits of taking up such a project at a college level are manifold. They include,
+but are not limited to:
+1. Vastly boosting the research culture on campus, as these activities require tremen-
+dous amount of research and study. Exposure to this can incline a lot of students
+towards research
+2. Giving students an opportunity to explore core engineering fields
+3. Giving students an opportunity to learn by doing, and hands-on experience in
+working on projects which has especially been hampered drastically in the past
+two years due to the pandemic
+4. Acquiring lot of experience and knowledge by virtue of working on complex space
+technology
+5. Increase research output of students (BITS Pilani, Pilani campus also has a
+satellite team that has produced 20 research papers so far despite not having a
+launch yet)
+To conclude, we believe that as a team and as an institution both, we have the
+required passion, work ethic and talent to take this project to completion. Making a
+satellite from scratch and launching it into orbit at an undergraduate level is no mean
+feat. Very few colleges from India have managed to pull this off, and none of the BITS,
+Pilani campuses have ever launched a satellite into space.
+We believe we are capable of changing this, and making BITS, Pilani join the elite
+student space club. However for this to succeed, we will require expert guidance from
+experienced veterans in the field. This project is a long-term project and needs the
+most talented and hardworking people to be working on it. It will need to be taken up
+at a university level.
+51
+
